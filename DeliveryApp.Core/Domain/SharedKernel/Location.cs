@@ -6,7 +6,7 @@ namespace DeliveryApp.Core.Domain.SharedKernel;
 public record Location
 {
     private const int MaxPossibleCoordinate = 10;
-    private const int MinPossibleCoordinate = 10;
+    private const int MinPossibleCoordinate = 1;
 
     public int X { get; }
 
