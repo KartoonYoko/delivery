@@ -5,6 +5,9 @@ namespace DeliveryApp.Core.Domain.SharedKernel;
 
 public record Location
 {
+    private const int MaxPossibleCoordinate = 10;
+    private const int MinPossibleCoordinate = 10;
+
     public int X { get; }
 
     public int Y { get; }
@@ -21,8 +24,8 @@ public record Location
 
     public static Result<Location, Error> Create(int x, int y)
     {
-        if (x < 1 || x > 10) return GeneralErrors.ValueIsRequired(nameof(x));
-        if (y < 1 || y > 10) return GeneralErrors.ValueIsRequired(nameof(y));
+        if (x < MinPossibleCoordinate || x > MaxPossibleCoordinate) return GeneralErrors.ValueIsRequired(nameof(x));
+        if (y < MinPossibleCoordinate || y > MaxPossibleCoordinate) return GeneralErrors.ValueIsRequired(nameof(y));
 
         return new Location(x, y);
     }
