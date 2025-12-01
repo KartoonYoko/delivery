@@ -12,11 +12,16 @@ public sealed class Error : ValueObject
     {
     }
 
-    public Error(string code, string message)
+    public Error(string code, string message, List<Error>? innerErrors = null)
     {
         Code = code;
         Message = message;
+
+        if (innerErrors is not null)
+            InnerErrors = innerErrors;
     }
+
+    public List<Error> InnerErrors { get; private set; } = [];
 
     /// <summary>
     ///     Код ошибки
