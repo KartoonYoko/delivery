@@ -34,8 +34,8 @@ public record Location
     {
         var random = new Random();
 
-        var x = random.Next(1, 10);
-        var y = random.Next(1, 10);
+        var x = random.Next(MinPossibleCoordinate, MaxPossibleCoordinate);
+        var y = random.Next(MinPossibleCoordinate, MaxPossibleCoordinate);
 
         return new Location(x, y);
     }
