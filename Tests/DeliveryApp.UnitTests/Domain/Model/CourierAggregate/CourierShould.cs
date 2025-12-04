@@ -127,4 +127,34 @@ public class CourierShould
         //Assert
         result.Should().Be(correctResult);
     }
+
+    [Theory]
+    [InlineData(1, 1, 3, 3, 3, 1, 2)]
+    [InlineData(3, 3, 1, 1, 1, 3, 2)]
+    [InlineData(1, 1, 3, 3, 3, 2, 3)]
+    [InlineData(1, 1, 3, 3, 3, 3, 4)]
+    public void TakeStepTowardsDestinationCorrectly(
+        int startX,
+        int startY,
+        int destinationX,
+        int destinationY,
+        int correctX,
+        int correctY,
+        int speed
+    )
+    {
+        //Arrange
+        var courier = Courier.Create(
+            "Some courier",
+            speed,
+            Location.Create(startX, startY).Value
+        );
+
+        //Act
+        courier.TakeStepTowardsDestination(Location.Create(destinationX, destinationY).Value);
+
+        //Assert
+        courier.Location.X.Should().Be(correctX);
+        courier.Location.Y.Should().Be(correctY);
+    }
 }

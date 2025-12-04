@@ -97,12 +97,12 @@ public sealed class Courier : Aggregate<Guid>
 
         if (Location.X != destination.X && currentStamina > 0)
         {
-            var isPositiveSign = (Location.X - destination.X) > 0;
+            var isPositiveSign = (destination.X - Location.X) > 0;
             var distance = Math.Abs(Location.X - destination.X);
             var isDistanceLessOrEqualsThanSpeed = distance <= currentStamina;
             var lengthToGo = isDistanceLessOrEqualsThanSpeed
-                ? currentStamina
-                : distance;
+                ? distance
+                : currentStamina;
 
             lengthToGo = isPositiveSign ? lengthToGo : lengthToGo * -1;
 
@@ -112,17 +112,17 @@ public sealed class Courier : Aggregate<Guid>
 
             Location = result.Value;
 
-            currentStamina -= lengthToGo;
+            currentStamina -= Math.Abs(lengthToGo);
         }
 
         if (Location.Y != destination.Y && currentStamina > 0)
         {
-            var isPositiveSign = (Location.Y - destination.Y) > 0;
+            var isPositiveSign = (destination.Y - Location.Y) > 0;
             var distance = Math.Abs(Location.Y - destination.Y);
             var isDistanceLessOrEqualsThanSpeed = distance <= currentStamina;
             var lengthToGo = isDistanceLessOrEqualsThanSpeed
-                ? currentStamina
-                : distance;
+                ? distance
+                : currentStamina;
 
             lengthToGo = isPositiveSign ? lengthToGo : lengthToGo * -1;
 
