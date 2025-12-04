@@ -16,7 +16,7 @@ public class CourierShould
         //Arrange
 
         //Act
-        var courier = Courier.Create("Some courier", 2, Location.CreateRandom());
+        var courier = Courier.Create("Some courier", 2, Location.CreateRandom()).Value;
         var bag = courier.StoragePlaces.FirstOrDefault();
 
         //Assert
@@ -29,16 +29,16 @@ public class CourierShould
     public void AddStoragePlace()
     {
         //Arrange
-        var courier = Courier.Create("Some courier", 2, Location.CreateRandom());
+        var courier = Courier.Create("Some courier", 2, Location.CreateRandom()).Value;
         var spName = "Место хранения";
         var spVolume = 5;
-        var storagePlace = StoragePlace.Create(spName, spVolume).Value;
 
         //Act
-        courier.AddStoragePlace(storagePlace);
+        var result = courier.AddStoragePlace(spName, spVolume);
         var sp = courier.StoragePlaces[1];
 
         //Assert
+        result.IsSuccess.Should().BeTrue();
         sp.Should().NotBeNull();
         sp.Name.Should().Be(spName);
         sp.TotalVolume.Should().Be(spVolume);
@@ -48,7 +48,7 @@ public class CourierShould
     public void TakeOrderWhenPossible()
     {
         //Arrange
-        var courier = Courier.Create("Some courier", 2, Location.CreateRandom());
+        var courier = Courier.Create("Some courier", 2, Location.CreateRandom()).Value;
         var orderVolumeThatLessThanDefaultBagSize = Courier.DefaultBagSize - 1;
         var order = Order.Create(Guid.NewGuid(), Location.CreateRandom(), orderVolumeThatLessThanDefaultBagSize);
 
@@ -64,7 +64,7 @@ public class CourierShould
     public void NotTakeOrderWhenNotPossible()
     {
         //Arrange
-        var courier = Courier.Create("Some courier", 2, Location.CreateRandom());
+        var courier = Courier.Create("Some courier", 2, Location.CreateRandom()).Value;
         var orderVolumeThatMoreThanDefaultBagSize = Courier.DefaultBagSize + 1;
         var order = Order.Create(Guid.NewGuid(), Location.CreateRandom(), orderVolumeThatMoreThanDefaultBagSize);
 
@@ -80,7 +80,7 @@ public class CourierShould
     public void CompleteOrderWhenHeContainsTheOrder()
     {
         //Arrange
-        var courier = Courier.Create("Some courier", 2, Location.CreateRandom());
+        var courier = Courier.Create("Some courier", 2, Location.CreateRandom()).Value;
         var order = Order.Create(Guid.NewGuid(), Location.CreateRandom(), Courier.DefaultBagSize - 1);
         var resultOfTaking = courier.TakeOrder(order);
         resultOfTaking.IsSuccess.Should().BeTrue();
@@ -97,7 +97,7 @@ public class CourierShould
     public void NotCompleteOrderWhenHeDoesNotContainsTheOrder()
     {
         //Arrange
-        var courier = Courier.Create("Some courier", 2, Location.CreateRandom());
+        var courier = Courier.Create("Some courier", 2, Location.CreateRandom()).Value;
         var order = Order.Create(Guid.NewGuid(), Location.CreateRandom(), Courier.DefaultBagSize - 1);
 
         //Act
@@ -119,7 +119,11 @@ public class CourierShould
     )
     {
         //Arrange
-        var courier = Courier.Create("Some courier", 2, Location.Create(locationX, locationY).Value);
+        var courier = Courier.Create(
+            "Some courier",
+            2,
+            Location.Create(locationX, locationY).Value
+        ).Value;
 
         //Act
         var result = courier.EvaluateNumberOfStepsToDestination(Location.Create(destinationX, destinationY).Value);
@@ -148,12 +152,13 @@ public class CourierShould
             "Some courier",
             speed,
             Location.Create(startX, startY).Value
-        );
+        ).Value;
 
         //Act
-        courier.TakeStepTowardsDestination(Location.Create(destinationX, destinationY).Value);
+        var result = courier.TakeStepTowardsDestination(Location.Create(destinationX, destinationY).Value);
 
         //Assert
+        result.IsSuccess.Should().BeTrue();
         courier.Location.X.Should().Be(correctX);
         courier.Location.Y.Should().Be(correctY);
     }

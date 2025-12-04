@@ -32,18 +32,27 @@ public sealed class Courier : Aggregate<Guid>
         Location = location;
     }
 
-    public static Courier Create(string name, int speed, Location location)
+    public static Result<Courier, Error> Create(string name, int speed, Location location)
     {
+        if (string.IsNullOrEmpty(name)) return GeneralErrors.ValueIsInvalid(nameof(name));
+        if (speed < 0) return GeneralErrors.ValueIsInvalid(nameof(speed));
+
         var courier = new Courier(name, speed, location);
 
-        courier.AddStoragePlace(StoragePlace.Create(DefaultBagName, DefaultBagSize).Value);
+        courier.AddStoragePlace(DefaultBagName, DefaultBagSize);
 
         return courier;
     }
 
-    public void AddStoragePlace(StoragePlace storagePlace)
+    public UnitResult<Error> AddStoragePlace(string name, int totalVolume)
     {
-        StoragePlaces.Add(storagePlace);
+        var result = StoragePlace.Create(name, totalVolume);
+        if (result.IsFailure)
+            return result;
+
+        StoragePlaces.Add(result.Value);
+
+        return UnitResult.Success<Error>();
     }
 
     public bool CouldTakeOrder(Order order)
@@ -57,31 +66,31 @@ public sealed class Courier : Aggregate<Guid>
         return false;
     }
 
-    public Result<object, Error> TakeOrder(Order order)
+    public UnitResult<Error> TakeOrder(Order order)
     {
         foreach (var storagePlace in StoragePlaces)
         {
             var result = storagePlace.PlaceOrder(order.Id, order.Volume);
 
             if (result.IsSuccess)
-                return new object();
+                return UnitResult.Success<Error>();
         }
 
-        return Result.Failure<object, Error>(Errors.CouldNotTakeOrder());
+        return Errors.CouldNotTakeOrder();
     }
 
-    public Result<object, Error> CompleteOrder(Order order)
+    public UnitResult<Error> CompleteOrder(Order order)
     {
         foreach (var storagePlace in StoragePlaces)
         {
             if (storagePlace.OrderId == order.Id)
             {
                 storagePlace.ExtractTheOrder();
-                return new object();
+                return UnitResult.Success<Error>();
             }
         }
 
-        return Result.Failure<object, Error>(Errors.OrderNotFound());
+        return UnitResult.Failure(Errors.OrderNotFound());
     }
 
     public int EvaluateNumberOfStepsToDestination(Location destination)
@@ -91,7 +100,7 @@ public sealed class Courier : Aggregate<Guid>
         return distance / Speed;
     }
 
-    public Result<object, Error> TakeStepTowardsDestination(Location destination)
+    public UnitResult<Error> TakeStepTowardsDestination(Location destination)
     {
         var currentStamina = Speed;
 
@@ -133,7 +142,7 @@ public sealed class Courier : Aggregate<Guid>
             Location = result.Value;
         }
 
-        return new object();
+        return UnitResult.Success<Error>();
     }
 
     public static class Errors
