@@ -1,6 +1,9 @@
 using DeliveryApp.Api;
+using DeliveryApp.Core.Domain.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IDispatchService, DispatchService>();
 
 // Health Checks
 builder.Services.AddHealthChecks();
@@ -8,11 +11,10 @@ builder.Services.AddHealthChecks();
 // Cors
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(
-        policy =>
-        {
-            policy.AllowAnyOrigin(); // Не делайте так в проде!
-        });
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin(); // Не делайте так в проде!
+    });
 });
 
 // Configuration
