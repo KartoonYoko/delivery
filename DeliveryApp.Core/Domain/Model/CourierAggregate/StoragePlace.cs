@@ -43,14 +43,14 @@ public sealed class StoragePlace : Entity<Guid>
         return result.IsSuccess;
     }
 
-    public Result<object, Error> PlaceOrder(Guid newOrderId, int orderVolume)
+    public Result<object, Error> PlaceOrder(Guid orderId, int orderVolume)
     {
         var result = CheckPossibilityToPlaceOrder(orderVolume);
 
         if (result.IsFailure)
             return Result.Failure<object, Error>(Errors.OrderCouldNotBePlaced(result.Error));
 
-        OrderId = newOrderId;
+        OrderId = orderId;
 
         return new object();
     }
