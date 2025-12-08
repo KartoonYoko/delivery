@@ -30,6 +30,8 @@ public class DispatchService : IDispatchService
 
         if (currentCourier == null) return Errors.CourierNotFound();
 
+        currentCourier.TakeOrder(order);
+
         return currentCourier;
     }
 
