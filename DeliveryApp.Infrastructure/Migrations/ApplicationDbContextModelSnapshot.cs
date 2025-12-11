@@ -91,8 +91,15 @@ namespace DeliveryApp.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("courier_id");
 
+                    b.Property<int>("Volume")
+                        .HasColumnType("integer")
+                        .HasColumnName("volume");
+
                     b.HasKey("Id")
                         .HasName("pk_orders");
+
+                    b.HasIndex("CourierId")
+                        .HasDatabaseName("ix_orders_courier_id");
 
                     b.ToTable("orders", (string)null);
                 });
@@ -141,6 +148,11 @@ namespace DeliveryApp.Infrastructure.Migrations
 
             modelBuilder.Entity("DeliveryApp.Core.Domain.Model.OrderAggregate.Order", b =>
                 {
+                    b.HasOne("DeliveryApp.Core.Domain.Model.CourierAggregate.Courier", null)
+                        .WithMany()
+                        .HasForeignKey("CourierId")
+                        .HasConstraintName("fk_orders_couriers_courier_id");
+
                     b.OwnsOne("DeliveryApp.Core.Domain.SharedKernel.Location", "Location", b1 =>
                         {
                             b1.Property<Guid>("OrderId")
