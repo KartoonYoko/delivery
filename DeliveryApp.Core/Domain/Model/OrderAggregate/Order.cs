@@ -6,9 +6,9 @@ namespace DeliveryApp.Core.Domain.Model.OrderAggregate;
 
 public class Order : Aggregate<Guid>
 {
-    public Location Location { get; }
+    public Location Location { get; private set; }
 
-    public int Volume { get; }
+    public int Volume { get; private set; }
 
     public Status Status { get; private set; } = Status.Created;
 
@@ -38,14 +38,14 @@ public class Order : Aggregate<Guid>
         Status = Status.Assigned;
     }
 
-    public Result<object, Error> Complete()
+    public UnitResult<Error> Complete()
     {
         if (Status != Status.Assigned)
-            return Result.Failure<object, Error>(Errors.OrderCouldNotBeComplete());
+            return UnitResult.Failure<Error>(Errors.OrderCouldNotBeComplete());
 
         Status = Status.Completed;
 
-        return Result.Success<object, Error>(new object());
+        return UnitResult.Success<Error>();
     }
 
     public static class Errors

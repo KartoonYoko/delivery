@@ -3,12 +3,13 @@
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>disable</Nullable>
+        <Nullable>enable</Nullable>
         <LangVersion>default</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Confluent.Kafka" Version="2.11.0" />
+        <PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
         <PackageReference Include="Google.Protobuf" Version="3.31.1" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
         <PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
@@ -37,6 +38,10 @@
         <None Remove="Adapters\Grpc\GeoService\grpc.proto"/>
         <None Remove="Adapters\Kafka\BasketConfirmed\Contract.proto"/>
         <None Remove="Adapters\Grpc\GeoService\Contract.proto"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Adapters\Postgres\Migrations\" />
     </ItemGroup>
 
 </Project>

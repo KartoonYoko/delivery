@@ -1,9 +1,13 @@
 using DeliveryApp.Api;
 using DeliveryApp.Core.Domain.Services;
+using DeliveryApp.Infrastructure.Adapters.Postgres;
+using Microsoft.EntityFrameworkCore;
+using Primitives;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IDispatchService, DispatchService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Health Checks
 builder.Services.AddHealthChecks();
@@ -19,7 +23,17 @@ builder.Services.AddCors(options =>
 
 // Configuration
 builder.Services.ConfigureOptions<SettingsSetup>();
-var connectionString = builder.Configuration["CONNECTION_STRING"];
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options
+        .UseNpgsql(
+            connectionString,
+            sqlOptions => { sqlOptions.MigrationsAssembly("DeliveryApp.Infrastructure"); }
+        )
+        .UseSnakeCaseNamingConvention();
+});
 
 var app = builder.Build();
 
@@ -34,10 +48,10 @@ app.UseHealthChecks("/health");
 app.UseRouting();
 
 // Apply Migrations
-// using (var scope = app.Services.CreateScope())
-// {
-//     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-//     db.Database.Migrate();
-// }
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await db.Database.MigrateAsync(app.Lifetime.ApplicationStopping);
+}
 
 app.Run();
