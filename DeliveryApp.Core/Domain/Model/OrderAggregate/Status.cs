@@ -17,7 +17,7 @@ public class Status : ValueObject
         Name = name;
     }
 
-    public string Name { get; }
+    public string Name { get; private set; }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

@@ -17,7 +17,12 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             });
 
         builder
-            .OwnsOne(entity => entity.Status, b => { b.Property(x => x.Name).HasColumnName("status").IsRequired(); });
+            .OwnsOne(entity => entity.Status, b =>
+            {
+                b.Property(x => x.Name)
+                    .HasColumnName("status")
+                    .IsRequired();
+            });
 
         builder
             .HasOne<Courier>()
