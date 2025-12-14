@@ -1,3 +1,4 @@
+using System.Reflection;
 using DeliveryApp.Api;
 using DeliveryApp.Core.Domain.Services;
 using DeliveryApp.Infrastructure.Adapters.Postgres;
@@ -8,6 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IDispatchService, DispatchService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly())
+);
 
 // Health Checks
 builder.Services.AddHealthChecks();
