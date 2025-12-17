@@ -1,5 +1,6 @@
 using System.Reflection;
 using DeliveryApp.Api;
+using DeliveryApp.Api.Adapters.BackgroundJobs;
 using DeliveryApp.Core.Domain.Services;
 using DeliveryApp.Core.Ports;
 using DeliveryApp.Infrastructure;
@@ -92,22 +93,18 @@ builder.Services.AddSwaggerGenNewtonsoftSupport();
 // CRON Jobs
 builder.Services.AddQuartz(configure =>
 {
-    // var assignOrdersJobKey = new JobKey(nameof(AssignOrdersJob));
-    // var moveCouriersJobKey = new JobKey(nameof(MoveCouriersJob));
-    // configure
-    //     .AddJob<AssignOrdersJob>(assignOrdersJobKey)
-    //     .AddTrigger(
-    //         trigger => trigger.ForJob(assignOrdersJobKey)
-    //             .WithSimpleSchedule(
-    //                 schedule => schedule.WithIntervalInSeconds(1)
-    //                     .RepeatForever()))
-    //     .AddJob<MoveCouriersJob>(moveCouriersJobKey)
-    //     .AddTrigger(
-    //         trigger => trigger.ForJob(moveCouriersJobKey)
-    //             .WithSimpleSchedule(
-    //                 schedule => schedule.WithIntervalInSeconds(2)
-    //                     .RepeatForever()));
-    // configure.UseMicrosoftDependencyInjectionJobFactory();
+    var assignOrdersJobKey = new JobKey(nameof(AssignOrdersJob));
+    var moveCouriersJobKey = new JobKey(nameof(MoveCouriersJob));
+    configure
+        .AddJob<AssignOrdersJob>(assignOrdersJobKey)
+        .AddTrigger(trigger => trigger.ForJob(assignOrdersJobKey)
+            .WithSimpleSchedule(schedule => schedule.WithIntervalInSeconds(1)
+                .RepeatForever()))
+        .AddJob<MoveCouriersJob>(moveCouriersJobKey)
+        .AddTrigger(trigger => trigger.ForJob(moveCouriersJobKey)
+            .WithSimpleSchedule(schedule => schedule.WithIntervalInSeconds(2)
+                .RepeatForever()));
+    configure.UseMicrosoftDependencyInjectionJobFactory();
 });
 builder.Services.AddQuartzHostedService();
 

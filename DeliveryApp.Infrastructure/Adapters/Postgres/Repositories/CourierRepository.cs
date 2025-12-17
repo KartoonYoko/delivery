@@ -14,7 +14,6 @@ public class CourierRepository(ApplicationDbContext dbContext) : ICourierReposit
 
     public Task UpdateCourierAsync(Courier courier, CancellationToken cancellationToken)
     {
-        dbContext.Attach(courier.StoragePlaces);
         dbContext.Update(courier);
 
         return Task.CompletedTask;

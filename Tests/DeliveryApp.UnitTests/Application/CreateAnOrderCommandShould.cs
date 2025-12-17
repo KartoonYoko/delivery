@@ -11,14 +11,14 @@ using Xunit;
 
 namespace DeliveryApp.UnitTests.Application;
 
-public class MakeAnOrderCommandShould
+public class CreateAnOrderCommandShould
 {
     private readonly IOrderRepository _orderRepository = Substitute.For<IOrderRepository>();
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
 
 
     [Fact]
-    public async Task CreateOrder()
+    public async Task CreateOrderSuccessfully()
     {
         //Arrange
         var command = CreateAnOrderCommand.Create(Guid.NewGuid(), "some street", 10);

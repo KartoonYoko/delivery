@@ -41,7 +41,7 @@ public class Order : Aggregate<Guid>
     public UnitResult<Error> Complete()
     {
         if (Status != Status.Assigned)
-            return UnitResult.Failure<Error>(Errors.OrderCouldNotBeComplete());
+            return UnitResult.Failure(Errors.OrderCouldNotBeComplete());
 
         Status = Status.Completed;
 
