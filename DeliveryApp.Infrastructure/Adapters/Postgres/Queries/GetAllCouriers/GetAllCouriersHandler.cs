@@ -1,12 +1,14 @@
 ﻿using DeliveryApp.Core.Application.Queries.GetAllCouriers;
 using DeliveryApp.Core.Ports;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeliveryApp.Infrastructure.Adapters.Postgres.Queries.GetAllCouriers;
 
-public class GetAllCouriersQuery(ApplicationDbContext dbContext) : IGetAllCouriersQuery
+public class GetAllCouriersHandler(ApplicationDbContext dbContext)
+    : IRequestHandler<GetCouriersQuery, GetCouriersResponse>
 {
-    public async Task<GetCouriersResponse> Handle(CancellationToken cancellationToken)
+    public async Task<GetCouriersResponse> Handle(GetCouriersQuery request, CancellationToken cancellationToken)
     {
         var items = await dbContext.Couriers
             .Select(x => new Courier
@@ -20,7 +22,7 @@ public class GetAllCouriersQuery(ApplicationDbContext dbContext) : IGetAllCourie
                 }
             })
             .ToListAsync(cancellationToken);
-        
+
         return new GetCouriersResponse(items);
     }
 }

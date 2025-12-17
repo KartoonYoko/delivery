@@ -1,8 +1,6 @@
-﻿using System.Runtime.InteropServices;
+﻿namespace DeliveryApp.Core.Application.Commands.CreateAnOrder;
 
-namespace DeliveryApp.Core.Application.Commands.MakeAnOrder;
-
-public class MakeAnOrderCommand : IRequest<UnitResult<Error>>
+public class CreateAnOrderCommand : IRequest<UnitResult<Error>>
 {
     /// <summary>
     ///     Идентификатор заказа
@@ -20,9 +18,9 @@ public class MakeAnOrderCommand : IRequest<UnitResult<Error>>
     /// </summary>
     public int Volume { get; private set; }
 
-    public static MakeAnOrderCommand Create(Guid orderId, string street, int volume)
+    public static CreateAnOrderCommand Create(Guid orderId, string street, int volume)
     {
-        var command = new MakeAnOrderCommand
+        var command = new CreateAnOrderCommand
         {
             OrderId = orderId,
             Street = street,
