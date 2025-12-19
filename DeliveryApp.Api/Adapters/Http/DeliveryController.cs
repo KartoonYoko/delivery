@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OpenApi.Controllers;
 using OpenApi.Models;
+using Location = OpenApi.Models.Location;
 
 namespace DeliveryApp.Api.Adapters.Http;
 
@@ -17,7 +18,7 @@ public class DeliveryController(IMediator mediator) : DefaultApiController
         var result = await mediator.Send(command);
         if (result.IsFailure)
             return Problem(statusCode: StatusCodes.Status500InternalServerError);
-        
+
         return Ok();
     }
 
@@ -39,13 +40,38 @@ public class DeliveryController(IMediator mediator) : DefaultApiController
     {
         var query = new GetCouriersQuery();
         var result = await mediator.Send(query);
-        return Ok(result);
+
+        var dto = result.Couriers
+            .Select(x => new OpenApi.Models.Courier
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Location = new Location
+                {
+                    X = x.Location.X,
+                    Y = x.Location.Y,
+                }
+            })
+            .ToList();
+        return Ok(dto);
     }
 
     public override async Task<IActionResult> GetOrders()
     {
         var query = new GetUncompletedOrdersQuery();
         var result = await mediator.Send(query);
-        return Ok(result);
+
+        var dto = result.Orders
+            .Select(x => new OpenApi.Models.Order
+            {
+                Id = x.Id,
+                Location = new Location
+                {
+                    X = x.LocationDto.X,
+                    Y = x.LocationDto.Y,
+                }
+            })
+            .ToList();
+        return Ok(dto);
     }
 }
