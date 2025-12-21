@@ -1,6 +1,7 @@
 using System.Reflection;
 using DeliveryApp.Api;
 using DeliveryApp.Api.Adapters.BackgroundJobs;
+using DeliveryApp.Api.Adapters.Kafka.BasketConfirmed;
 using DeliveryApp.Core.Domain.Services;
 using DeliveryApp.Core.Ports;
 using DeliveryApp.Infrastructure;
@@ -22,6 +23,7 @@ builder.Services.AddScoped<IDispatchService, DispatchService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ICourierRepository, CourierRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddHostedService<ConsumerService>();
 
 builder.Services.AddMediatR(cfg =>
     {
@@ -45,7 +47,7 @@ builder.Services.AddCors(options =>
 // Configuration
 builder.Services.ConfigureOptions<SettingsSetup>();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration["CONNECTION_STRING"];
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options
