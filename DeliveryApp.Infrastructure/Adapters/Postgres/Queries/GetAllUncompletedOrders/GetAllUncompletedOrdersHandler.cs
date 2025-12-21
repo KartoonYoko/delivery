@@ -1,17 +1,20 @@
 ﻿using DeliveryApp.Core.Application.Queries.GetAllUncompletedOrders;
 using DeliveryApp.Core.Domain.Model.OrderAggregate;
-using DeliveryApp.Core.Ports;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeliveryApp.Infrastructure.Adapters.Postgres.Queries.GetAllUncompletedOrders;
 
-public class GetAllUncompletedOrdersQuery(ApplicationDbContext dbContext) : IGetAllUncompletedOrdersQuery
+public class GetAllUncompletedOrdersHandler(ApplicationDbContext dbContext)
+    : IRequestHandler<GetUncompletedOrdersQuery, GetUncompletedOrdersResponse>
 {
-    public async Task<GetUncompletedOrdersResponse> Handle(CancellationToken cancellationToken)
+    public async Task<GetUncompletedOrdersResponse> Handle(
+        GetUncompletedOrdersQuery request,
+        CancellationToken cancellationToken
+    )
     {
         var items = await dbContext.Orders
-            .Where(x => x.Status != Status.Created)
-            .Where(x => x.Status != Status.Completed)
+            .Where(x => x.Status.Name != Status.Completed.Name)
             .Select(x => new OrderDto
             {
                 Id = x.Id,

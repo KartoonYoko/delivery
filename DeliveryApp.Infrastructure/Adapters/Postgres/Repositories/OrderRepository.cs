@@ -27,7 +27,7 @@ public class OrderRepository(ApplicationDbContext dbContext) : IOrderRepository
     public Task<Order?> GetAnyCreatedOrderAsync(CancellationToken cancellationToken)
     {
         return dbContext.Orders
-            .Where(x => x.Status == Status.Created)
+            .Where(x => x.Status.Name == Status.Created.Name)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -41,7 +41,7 @@ public class OrderRepository(ApplicationDbContext dbContext) : IOrderRepository
         while (!cancellationToken.IsCancellationRequested)
         {
             var batch = await dbContext.Orders
-                .Where(x => x.Status == Status.Assigned)
+                .Where(x => x.Status.Name == Status.Assigned.Name)
                 .OrderBy(x => x.Id)
                 .Skip(skip)
                 .Take(take)

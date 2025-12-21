@@ -1,16 +1,15 @@
 ﻿using DeliveryApp.Core.Domain.Model.OrderAggregate;
 using DeliveryApp.Core.Domain.SharedKernel;
 using DeliveryApp.Core.Ports;
-using MediatR;
 
-namespace DeliveryApp.Core.Application.Commands.MakeAnOrder;
+namespace DeliveryApp.Core.Application.Commands.CreateAnOrder;
 
-public class MakeAnOrderHandler(
+public class CreateAnOrderHandler(
     IOrderRepository orderRepository,
     IUnitOfWork unitOfWork
-) : IRequestHandler<MakeAnOrderCommand, UnitResult<Error>>
+) : IRequestHandler<CreateAnOrderCommand, UnitResult<Error>>
 {
-    public async Task<UnitResult<Error>> Handle(MakeAnOrderCommand request, CancellationToken cancellationToken)
+    public async Task<UnitResult<Error>> Handle(CreateAnOrderCommand request, CancellationToken cancellationToken)
     {
         var order = Order.Create(request.OrderId, Location.CreateRandom(), request.Volume);
 
