@@ -16,9 +16,7 @@ public class AssignOrdersJob(
         var assignOrdersCommand = new AssignAnOrderToCourierCommand();
         var result = await mediator.Send(assignOrdersCommand);
         if (result.IsFailure)
-            if (result.Error.Code == DispatchService.Errors.CourierNotFound().Code)
-                logger.LogInformation(result.Error.Code);
-            else
+            if (result.Error.Code != DispatchService.Errors.CourierNotFound().Code)
                 logger.LogError(result.Error.Code);
     }
 }
