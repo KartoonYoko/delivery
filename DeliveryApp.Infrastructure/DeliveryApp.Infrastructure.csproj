@@ -8,16 +8,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Confluent.Kafka" Version="2.11.0" />
-        <PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
-        <PackageReference Include="Google.Protobuf" Version="3.31.1" />
-        <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
-        <PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
+        <PackageReference Include="Confluent.Kafka" Version="2.11.0"/>
+        <PackageReference Include="EFCore.NamingConventions" Version="9.0.0"/>
+        <PackageReference Include="Google.Protobuf" Version="3.31.1"/>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.71.0"/>
+        <PackageReference Include="Grpc.Net.Client" Version="2.71.0"/>
         <PackageReference Include="Grpc.Tools" Version="2.72.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.7">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -31,6 +31,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Protobuf Include="Adapters\Grpc\GeoService\grpc.proto">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Protobuf>
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\DeliveryApp.Core\DeliveryApp.Core.csproj"/>
     </ItemGroup>
 
@@ -38,6 +44,7 @@
         <None Remove="Adapters\Grpc\GeoService\grpc.proto"/>
         <None Remove="Adapters\Kafka\BasketConfirmed\Contract.proto"/>
         <None Remove="Adapters\Grpc\GeoService\Contract.proto"/>
+        <None Update="Adapters\Grpc\GeoService\grpc.proto" />
     </ItemGroup>
 
 </Project>
