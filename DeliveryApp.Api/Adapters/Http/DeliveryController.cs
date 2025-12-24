@@ -25,7 +25,7 @@ public class DeliveryController(IMediator mediator) : DefaultApiController
     public override async Task<IActionResult> CreateOrder()
     {
         var orderId = Guid.NewGuid();
-        var street = "Несуществующая";
+        var street = "Айтишная";
         var volume = 10;
 
         var command = CreateAnOrderCommand.Create(orderId, street, volume);
