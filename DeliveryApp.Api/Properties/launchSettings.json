@@ -10,7 +10,7 @@
         "CONNECTION_STRING": "Server=localhost;Port=5432;User Id=username;Password=secret;Database=delivery;",
         "GEO_SERVICE_GRPC_HOST": "http://localhost:5004",
         "MESSAGE_BROKER_HOST": "localhost:9092",
-        "ORDER_STATUS_CHANGED_TOPIC": "order.status.changed",
+        "ORDER_STATUS_CHANGED_TOPIC": "orders.events",
         "BASKET_CONFIRMED_TOPIC": "baskets.events"
       }
     }

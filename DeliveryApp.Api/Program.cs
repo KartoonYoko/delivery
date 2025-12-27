@@ -26,6 +26,7 @@ builder.Services.AddScoped<ICourierRepository, CourierRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddHostedService<ConsumerService>();
 builder.Services.AddScoped<IGeoClient, Client>();
+builder.Services.AddScoped<IMessageBusProducer, DeliveryApp.Infrastructure.Adapters.Kafka.Producer>();
 
 builder.Services.AddMediatR(cfg =>
     {

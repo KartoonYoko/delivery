@@ -55,7 +55,7 @@ public class ConsumerService : BackgroundService
 
                 using var scope = _scopeFactory.CreateScope();
                 var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                
+
                 var integrationEvent = JsonConvert.DeserializeObject<BasketConfirmedIntegrationEvent>(
                     consumeResult.Message.Value
                 );
@@ -89,5 +89,4 @@ public class ConsumerService : BackgroundService
             _logger.LogInformation(e, "Operation cancelled");
         }
     }
-    
 }
