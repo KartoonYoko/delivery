@@ -31,6 +31,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Protobuf Include="Adapters\Kafka\Contract.proto"/>
+    </ItemGroup>
+
+    <ItemGroup>
         <Protobuf Include="Adapters\Grpc\GeoService\grpc.proto">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Protobuf>
