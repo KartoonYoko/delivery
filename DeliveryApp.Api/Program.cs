@@ -5,6 +5,7 @@ using DeliveryApp.Api.Adapters.Kafka.BasketConfirmed;
 using DeliveryApp.Core.Domain.Services;
 using DeliveryApp.Core.Ports;
 using DeliveryApp.Infrastructure;
+using DeliveryApp.Infrastructure.Adapters.BackgroundJobs;
 using DeliveryApp.Infrastructure.Adapters.Grpc.GeoService;
 using DeliveryApp.Infrastructure.Adapters.Postgres;
 using DeliveryApp.Infrastructure.Adapters.Postgres.Repositories;
@@ -100,15 +101,26 @@ builder.Services.AddQuartz(configure =>
 {
     var assignOrdersJobKey = new JobKey(nameof(AssignOrdersJob));
     var moveCouriersJobKey = new JobKey(nameof(MoveCouriersJob));
+    var processOutboxMessagesJobKey = new JobKey(nameof(ProcessOutboxMessagesJob));
     configure
+        .AddJob<ProcessOutboxMessagesJob>(processOutboxMessagesJobKey)
+        .AddTrigger(trigger =>
+            trigger.ForJob(processOutboxMessagesJobKey)
+                .WithSimpleSchedule(schedule => schedule.WithIntervalInSeconds(3)
+                    .RepeatForever())
+        )
         .AddJob<AssignOrdersJob>(assignOrdersJobKey)
-        .AddTrigger(trigger => trigger.ForJob(assignOrdersJobKey)
-            .WithSimpleSchedule(schedule => schedule.WithIntervalInSeconds(1)
-                .RepeatForever()))
+        .AddTrigger(trigger =>
+            trigger.ForJob(assignOrdersJobKey)
+                .WithSimpleSchedule(schedule => schedule.WithIntervalInSeconds(1)
+                    .RepeatForever())
+        )
         .AddJob<MoveCouriersJob>(moveCouriersJobKey)
-        .AddTrigger(trigger => trigger.ForJob(moveCouriersJobKey)
-            .WithSimpleSchedule(schedule => schedule.WithIntervalInSeconds(2)
-                .RepeatForever()));
+        .AddTrigger(trigger =>
+            trigger.ForJob(moveCouriersJobKey)
+                .WithSimpleSchedule(schedule => schedule.WithIntervalInSeconds(2)
+                    .RepeatForever())
+        );
     configure.UseMicrosoftDependencyInjectionJobFactory();
 });
 builder.Services.AddQuartzHostedService();
