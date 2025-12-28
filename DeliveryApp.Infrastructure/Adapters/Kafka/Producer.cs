@@ -38,7 +38,7 @@ public sealed class Producer : IMessageBusProducer
         // Создаем сообщение для Kafka
         var message = new Message<string, string>
         {
-            Key = domainEvent.EventId.ToString(),
+            Key = domainEvent.Order.Id.ToString(),
             Value = JsonConvert.SerializeObject(integrationEvent),
         };
 
