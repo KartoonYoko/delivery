@@ -1,6 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using DeliveryApp.Core.Domain.Model.OrderAggregate.DomainEvents;
 using DeliveryApp.Core.Domain.SharedKernel;
-using Primitives;
 
 namespace DeliveryApp.Core.Domain.Model.OrderAggregate;
 
@@ -18,7 +17,7 @@ public class Order : Aggregate<Guid>
     {
     }
 
-    private Order(Guid id, Location location, int volume)
+    private Order(Guid id, Location location, int volume) : this()
     {
         Id = id;
         Location = location;
@@ -28,6 +27,7 @@ public class Order : Aggregate<Guid>
     public static Order Create(Guid id, Location location, int volume)
     {
         var order = new Order(id, location, volume);
+        order.RaiseDomainEvent(new OrderCreatedDomainEvent(order));
 
         return order;
     }
@@ -44,6 +44,8 @@ public class Order : Aggregate<Guid>
             return UnitResult.Failure(Errors.OrderCouldNotBeComplete());
 
         Status = Status.Completed;
+
+        RaiseDomainEvent(new OrderCompletedDomainEvent(this));
 
         return UnitResult.Success<Error>();
     }
